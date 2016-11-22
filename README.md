@@ -1,0 +1,1 @@
+Wraps GraphiQL providing support for OAuth 2.0 authorization
