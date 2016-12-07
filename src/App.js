@@ -4,53 +4,58 @@ import fetch from "isomorphic-fetch";
 import "./App.css";
 import "../node_modules/graphiql/graphiql.css";
 
-// Parse the search string to get url parameters.
-var search = window.location.search;
-var parameters = {};
-search.substr(1).split('&').forEach(function (entry) {
-  var eq = entry.indexOf('=');
-  if (eq >= 0) {
-    parameters[decodeURIComponent(entry.slice(0, eq))] =
-      decodeURIComponent(entry.slice(eq + 1));
-  }
-});
-
-// if variables was provided, try to format it.
-if (parameters.variables) {
-  try {
-    parameters.variables =
-      JSON.stringify(JSON.parse(parameters.variables), null, 2);
-  } catch (e) {
-    // Do nothing, display the invalid JSON as a string, rather than present an error.
-  }
-}
-
-
 class App extends Component {
 
   constructor(props) {
     super(props);
+
+    var search = window.location.search;
+    var parameters = {};
+    search.substr(1).split('&').forEach(function (entry) {
+      var eq = entry.indexOf('=');
+      if (eq >= 0) {
+        parameters[decodeURIComponent(entry.slice(0, eq))] = decodeURIComponent(entry.slice(eq + 1));
+      }
+    });
+
+    if (parameters.variables) {
+      try {
+        parameters.variables = JSON.stringify(JSON.parse(parameters.variables), null, 2);
+      } catch (e) {}
+    }
+
     this.state = {
-      url: '',
-      token: ''
+      url: parameters.url,
+      token: parameters.token,
+      query: parameters.query,
+      variables: parameters.variables
     };
   }
 
   onEditQuery(newQuery) {
-    parameters.query = newQuery;
+    this.setState({query: newQuery});
     this.updateURL();
   }
 
   onEditVariables(newVariables) {
-    parameters.variables = newVariables;
+    this.setState({variables: newVariables});
+    this.updateURL();
+  }
+
+  onUrlChange(e) {
+    this.setState({url: e.target.value});
+    this.updateURL();
+  }
+
+  onTokenChange(e) {
+    this.setState({token: e.target.value});
     this.updateURL();
   }
 
   updateURL() {
-    var newSearch = '?' + Object.keys(parameters).map(function (key) {
-        return encodeURIComponent(key) + '=' +
-          encodeURIComponent(parameters[key]);
-      }).join('&');
+    var newSearch = '?' + Object.keys(this.state)
+        .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(this.state[key]))
+        .join('&');
     history.replaceState(null, null, newSearch);
   }
 
@@ -68,30 +73,21 @@ class App extends Component {
     }
   }
 
-  onUrlChange(e) {
-    this.setState({url: e.target.value});
-  }
-
-  onTokenChange(e) {
-    this.setState({token: e.target.value});
-  }
-
   render() {
     return (
       <div className="app">
         <div className="header">
           <label>url
-            <input type="text" id="url-input" onChange={this.onUrlChange.bind(this)}/>
+            <input type="text" id="url-input" onChange={this.onUrlChange.bind(this)} value={this.state.url}/>
           </label>
           <label>token
-            <input type="text" id="token-input" onChange={this.onTokenChange.bind(this)}/>
+            <input type="text" id="token-input" onChange={this.onTokenChange.bind(this)} value={this.state.token}/>
           </label>
         </div>
         <div className="body" key={this.state.url}>
           <GraphiQL fetcher={this.fetcherFactory(this.state.url, this.state.token)}
-                    schema={undefined}
-                    query={parameters.query}
-                    variables={parameters.variables}
+                    query={this.state.query}
+                    variables={this.state.variables}
                     onEditQuery={this.onEditQuery.bind(this)}
                     onEditVariables={this.onEditVariables.bind(this)}/>
         </div>
