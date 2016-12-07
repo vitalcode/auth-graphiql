@@ -1,5 +1,9 @@
-.App {
+.app {
   height: 80vh;
+}
+
+.body {
+  height: 100%;
 }
 
 .header {
@@ -8,6 +12,8 @@
   padding: 5px;
   color: white;
 }
+
+
 
 label {
   padding-right: 5px;

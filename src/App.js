@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import GraphiQL from 'graphiql';
-import fetch from 'isomorphic-fetch';
-import './App.css';
-import '../node_modules/graphiql/graphiql.css';
+import React, {Component} from "react";
+import GraphiQL from "graphiql";
+import fetch from "isomorphic-fetch";
+import "./App.css";
+import "../node_modules/graphiql/graphiql.css";
 
 // Parse the search string to get url parameters.
 var search = window.location.search;
@@ -31,7 +31,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: 'http://localhost:8083/v1',
+      url: '',
       token: ''
     };
   }
@@ -61,7 +61,7 @@ class App extends Component {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization' : `Bearer ${token}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(graphQLParams),
       }).then(response => response.json());
@@ -78,7 +78,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="app">
         <div className="header">
           <label>url
             <input type="text" id="url-input" onChange={this.onUrlChange.bind(this)}/>
@@ -87,11 +87,14 @@ class App extends Component {
             <input type="text" id="token-input" onChange={this.onTokenChange.bind(this)}/>
           </label>
         </div>
-        <GraphiQL fetcher={this.fetcherFactory(this.state.url, this.state.token)}
-                  query={parameters.query}
-                  variables={parameters.variables}
-                  onEditQuery={this.onEditQuery.bind(this)}
-                  onEditVariables={this.onEditVariables.bind(this)}/>
+        <div className="body" key={this.state.url}>
+          <GraphiQL fetcher={this.fetcherFactory(this.state.url, this.state.token)}
+                    schema={undefined}
+                    query={parameters.query}
+                    variables={parameters.variables}
+                    onEditQuery={this.onEditQuery.bind(this)}
+                    onEditVariables={this.onEditVariables.bind(this)}/>
+        </div>
       </div>
     );
   }
