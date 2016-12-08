@@ -1,9 +1,7 @@
 .app {
-  height: 80vh;
-}
-
-.body {
-  height: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
@@ -13,7 +11,10 @@
   color: white;
 }
 
-
+.body {
+  height: 100%;
+  flex: 1;
+}
 
 label {
   padding-right: 5px;
