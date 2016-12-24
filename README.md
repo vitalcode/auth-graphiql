@@ -3,11 +3,11 @@ Great for testing GraphQL services secured with OAuth2.0
 
 ## Running with Docker
 
-`docker run -it -p3000:3000 jonwood/auth-graphiql`
+`docker run -it -p3000:3000 vitalcode/auth-graphiql`
 
 The service will now be listening on `http://localhost:3000`. To run on a
 different port change the first 3000 in the command, for example
-`docker run -it -p3001:3000 jonwood/auth-graphiql` will listen on port
+`docker run -it -p3001:3000 vitalcode/auth-graphiql` will listen on port
 3001 instead.
 
 ## Running locally
