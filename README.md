@@ -1,4 +1,5 @@
-Wraps GraphiQL providing support for bearer token and arbitrary URL. Great for testing GraphQL services secured with OAuth2.0
+Wraps GraphiQL providing support for bearer token and arbitrary URL.
+Great for testing GraphQL services secured with OAuth2.0
 
 ## Running with Docker
 
@@ -9,17 +10,17 @@ different port change the first 3000 in the command, for example
 `docker run -it -p3001:3000 jonwood/auth-graphiql` will listen on port
 3001 instead.
 
-#### Install dependencies
-```
-npm install
-```
+## Running locally
 
+### Install dependencies
 
-#### Run
-```
-npm start
-```
+`npm install`
 
-#### Injoy
+### Run
 
-Provide URL and token. Introspection info will be fetched on each URL update.
+`npm start` or `env PORT=3001 npm start` to run on a different port.
+
+### Enjoy
+
+Open `http://localhost:3000`, then provide a URL and token. Information
+from the endpoint will be fetched whenever you update the URL.
