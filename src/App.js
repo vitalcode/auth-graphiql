@@ -60,14 +60,17 @@ class App extends Component {
   }
 
   fetcherFactory(url, token) {
+    let headers = {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+    }
+    if (token) {
+         headers['Authorization'] = `Bearer ${token}`
+    }
     return function graphQLFetcher(graphQLParams) {
       return fetch(url + '/graphql', {
         method: 'post',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers,
         body: JSON.stringify(graphQLParams),
       }).then(response => response.json());
     }
