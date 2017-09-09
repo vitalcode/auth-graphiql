@@ -5,7 +5,6 @@ import "./App.css";
 import "../node_modules/graphiql/graphiql.css";
 
 class App extends Component {
-
   constructor(props) {
     super(props);
 
@@ -30,47 +29,53 @@ class App extends Component {
       query: parameters.query,
       variables: parameters.variables
     };
+    this.updateURL = this.updateURL.bind(this)
   }
 
   onEditQuery(newQuery) {
-    this.setState({query: newQuery});
-    this.updateURL();
+    this.setState({query: newQuery}, this.updateURL);
   }
 
   onEditVariables(newVariables) {
-    this.setState({variables: newVariables});
-    this.updateURL();
+    this.setState({variables: newVariables}, this.updateURL);
   }
 
   onUrlChange(e) {
-    this.setState({url: e.target.value});
-    this.updateURL();
+    this.setState({url: e.target.value}, this.updateURL);
   }
 
   onTokenChange(e) {
-    this.setState({token: e.target.value});
-    this.updateURL();
+    this.setState({token: e.target.value}, this.updateURL);
   }
 
   updateURL() {
     var newSearch = '?' + Object.keys(this.state)
         .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(this.state[key]))
         .join('&');
-    history.replaceState(null, null, newSearch);
+    window.history.replaceState(null, null, newSearch);
   }
 
   fetcherFactory(url, token) {
-    return function graphQLFetcher(graphQLParams) {
-      return fetch(url + '/graphql', {
-        method: 'post',
-        headers: {
+    if (url === this.oldUrl && token === this.oldToken) {
+         return this.oldFactory
+    }
+    this.oldUrl = url
+    this.oldToken = token
+    let headers = {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+    }
+    if (token && token !== 'undefined') {
+         headers['Authorization'] = `Bearer ${token}`
+    }
+    this.oldFactory = function graphQLFetcher(graphQLParams) {
+      return fetch(url + '/graphql', {
+        method: 'post',
+        headers,
         body: JSON.stringify(graphQLParams),
       }).then(response => response.json());
     }
+    return this.oldFactory
   }
 
   render() {
