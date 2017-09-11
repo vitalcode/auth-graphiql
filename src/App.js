@@ -56,7 +56,7 @@ class App extends Component {
   }
 
   fetcherFactory(url, token) {
-    if (url === this.oldUrl && token === this.oldToken) {
+    if (this.oldFactory && url === this.oldUrl && token === this.oldToken) {
          return this.oldFactory
     }
     this.oldUrl = url
