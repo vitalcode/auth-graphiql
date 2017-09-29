@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import GraphiQL from "graphiql";
-import fetch from "isomorphic-fetch";
 import "./App.css";
 import "../node_modules/graphiql/graphiql.css";
 
